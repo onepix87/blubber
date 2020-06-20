@@ -1,0 +1,22 @@
+image: node:latest
+stages:
+  - deploy
+
+deploy:
+  stage: deploy
+  before_script:
+    - apt update -qq && apt install -y -qq sshpass
+  script:
+    - sshpass -V
+    - export SSHPASS=$USER_PASS
+    - sshpass -e ssh -o stricthostkeychecking=no $USER@$HOST "pkill gunicorn1"
+    - sshpass -e scp -o stricthostkeychecking=no -r account/ $USER@$HOST:$SERVER_DIRECTORY 
+    - sshpass -e scp -o stricthostkeychecking=no -r blob/ $USER@$HOST:$SERVER_DIRECTORY 
+    - sshpass -e scp -o stricthostkeychecking=no -r blob_data/ $USER@$HOST:$SERVER_DIRECTORY 
+    - sshpass -e scp -o stricthostkeychecking=no -r templates/ $USER@$HOST:$SERVER_DIRECTORY 
+    - sshpass -e scp -o stricthostkeychecking=no manage.py $USER@$HOST:$SERVER_DIRECTORY
+    - sshpass -e ssh -o stricthostkeychecking=no $USER@$HOST "cd .. && cd $SERVER_DIRECTORY && source env/bin/activate && python manage.py collectstatic && deactivate"
+    - sshpass -e ssh -o stricthostkeychecking=no $USER@$HOST "echo $USER_PASS | /usr/bin/sudo -S systemctl start gunicorn1"
+  only: 
+    changes:
+      - "**/*.py"
