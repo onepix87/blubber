@@ -1,9 +1,9 @@
 const baseReqInit = {
-  cache: "no-cache",
+  // cache: "no-cache",
   headers: {
     "Content-Type": "application/json"
   },
-  credentials: "same-origin"
+  credentials: "include"
 };
 
 const basePostInit = {
@@ -12,8 +12,8 @@ const basePostInit = {
   headers: { "X-CSRFToken": document.cookie.replace(/(?:(?:^|.*;\s*)csrftoken\s*=\s*([^;]*).*$)|^.*$/, "$1") }
 };
 
-export const recordsUrl = "/api/records/";
-export const loginUrl = "/profile/login/";
+export const recordsUrl = "http://51.83.185.40/api/records/";
+export const loginUrl = "http://51.83.185.40/profile/login/";
 
 export const getJsonRequest = async url => {
   const reqInit = { ...baseReqInit, method: "GET" };

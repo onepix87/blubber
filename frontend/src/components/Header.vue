@@ -6,17 +6,14 @@
     <a-menu v-model="current" mode="horizontal">
       <a-menu-item key="Home">Список идей </a-menu-item>
       <a-menu-item key="Add"> Создать идею </a-menu-item>
-      <a-menu-item key="Favorite"> Избранное </a-menu-item>
     </a-menu>
 
-    <div v-if="true">
-      <a-button @click="openAuthPopup(true)" type="primaty" size="large"
-        >Войти</a-button
-      >
+    <div v-if="!user">
+      <a-button @click="openAuthPopup(true)" type="primaty" size="large">Войти</a-button>
     </div>
 
     <div v-else class="profile">
-      <a-button type="normal" icon="user" size="large" shape="circle" />
+      <a-button @click="go('Profile')" type="normal" icon="user" size="large" shape="circle" style="margin-top: 5px;" />
     </div>
   </div>
 </template>
@@ -29,6 +26,7 @@ export default {
   // components: { Button }
   created() {
     const array = [this.$route.name];
+    this.$store.commit("setCurrentPage", array);
     this.$store.commit("setCurrentPage", array);
   },
   methods: {
@@ -47,6 +45,9 @@ export default {
       set(value) {
         this.$store.commit("setCurrentPage", value);
       }
+    },
+    user() {
+      return this.$store.getters.getUser;
     }
   },
   data() {
@@ -70,5 +71,6 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin: 0 16px;
+  min-height: 48px;
 }
 </style>

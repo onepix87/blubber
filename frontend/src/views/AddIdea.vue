@@ -3,19 +3,41 @@
     <div class="form-wrapper">
       <a-form :form="form" @submit="this.sendPost">
         <a-form-item>
-          <a-input v-decorator="['name', { rules: [{ required: true, message: 'Пожалуйста, введите название'} ]}]" placeholder="Название"/>
+          <a-input
+            v-decorator="['name', { rules: [{ required: true, message: 'Пожалуйста, введите название' }] }]"
+            placeholder="Название"
+          />
         </a-form-item>
 
         <a-form-item>
-          <a-textarea v-decorator="['description', { rules: [{ required: true, message: 'Пожалуйста, введите описание'} ]}]" placeholder="Описание идеи" :auto-size="{ minRows: 3, maxRows: 5 }"/>
+          <a-textarea
+            v-decorator="['description', { rules: [{ required: true, message: 'Пожалуйста, введите описание' }] }]"
+            placeholder="Описание идеи"
+            :auto-size="{ minRows: 3, maxRows: 5 }"
+          />
         </a-form-item>
 
         <a-form-item>
-          <a-input v-decorator="['threshold_of_success', { rules: [{ required: true, message: 'Пожалуйста, введите порог успешности'} ]}]" placeholder="Порог успешности"/>
+          <a-input
+            v-decorator="[
+              'threshold_of_success',
+              { rules: [{ required: true, message: 'Пожалуйста, введите порог успешности' }] }
+            ]"
+            placeholder="Порог успешности"
+          />
         </a-form-item>
 
         <a-form-item>
-          <a-select v-decorator="['categories', { rules: [{ required: true, message: 'Пожалуйста, выберите категории вашей идеи'} ], initialValue: 'Выберите отдел'}]" style="width: 100%">
+          <a-select
+            v-decorator="[
+              'categories',
+              {
+                rules: [{ required: true, message: 'Пожалуйста, выберите категории вашей идеи' }],
+                initialValue: 'Выберите отдел'
+              }
+            ]"
+            style="width: 100%"
+          >
             <a-select-option v-for="department in departmentList" :key="department.id" :value="department.id">
               {{ department.name }}
             </a-select-option>
@@ -23,11 +45,7 @@
         </a-form-item>
 
         <a-form-item>
-          <a-upload
-            name="images"
-            :before-upload="beforeUpload"
-            :multiple="true"
-          >
+          <a-upload name="images" :before-upload="beforeUpload" :multiple="true">
             <a-button> <a-icon type="upload" /> Click to Upload </a-button>
           </a-upload>
         </a-form-item>
@@ -41,7 +59,8 @@
 </template>
 
 <script>
-import { postDataWithoutResponse, recordsUrl } from "../utils/fetch-utils";
+// import { postDataWithoutResponse, recordsUrl } from "../utils/fetch-utils";
+
 //TODO: Использовать VUEX
 export default {
   name: "AddIdea",
@@ -92,8 +111,12 @@ export default {
             formData.append(entry[0], entry[1]);
           });
           this.imagesList.forEach(image => formData.append("images[]", image));
+          formData.append("author", this.$store.getters.getUser.id);
 
-          postDataWithoutResponse(recordsUrl, formData);
+          // postDataWithoutResponse(recordsUrl, formData);
+          this.$store.dispatch("saveIdea", formData).then(() => {
+            this.$router.push({ name: "Home" });
+          });
           this.imagesList = [];
         }
       });

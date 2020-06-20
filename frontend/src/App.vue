@@ -8,10 +8,16 @@
 <script>
 import Header from "./components/Header";
 import LoginPopup from "./components/LoginPopup";
+
 export default {
   components: {
     Header,
     LoginPopup
+  },
+  created() {
+    if (localStorage && localStorage.userId) {
+      this.$store.commit("setUser");
+    }
   }
 };
 </script>
@@ -31,6 +37,7 @@ body {
   display: flex;
   flex-grow: 1;
   flex-flow: column nowrap;
+  overflow: hidden;
 }
 
 #nav {

@@ -1,7 +1,8 @@
 export default {
   state: {
     loading: false,
-    currentPage: ["Home"]
+    currentPage: ["Home"],
+    host: "http://51.83.185.40"
   },
   getters: {
     isLoading(state) {
@@ -9,6 +10,9 @@ export default {
     },
     getCurrentPage(state) {
       return state.currentPage;
+    },
+    getHost(state) {
+      return state.host;
     }
   },
   mutations: {
